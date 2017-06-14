@@ -9,22 +9,11 @@
 
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <EditText
-            android:id="@+id/fname"
-            android:focusable="@{loggedIn}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/fname"
-            android:inputType="text"
-            android:text="@{inputLabel}" />
-
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{buttonLabel}"
-            android:clickable="@{loggedIn}"/>
+            android:text="@string/login"/>
 
         <ListView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/listview"

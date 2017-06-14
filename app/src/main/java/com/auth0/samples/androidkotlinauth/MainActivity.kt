@@ -1,17 +1,25 @@
 package com.auth0.samples.androidkotlinauth
 
+import android.app.Dialog
+import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
-import org.json.JSONArray
-import android.databinding.DataBindingUtil
+import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.provider.AuthCallback
+import com.auth0.android.provider.WebAuthProvider
+import com.auth0.android.result.Credentials
 import com.auth0.samples.androidkotlinauth.databinding.ActivityMainBinding
+import org.json.JSONArray
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,10 +31,22 @@ class MainActivity : AppCompatActivity() {
                 .setContentView(this, R.layout.activity_main)
 
         binding.loggedIn = false
-        binding.inputLabel = resources.getString(R.string.label_please_login)
-        binding.buttonLabel = resources.getString(R.string.label_please_login)
+
+        val button = findViewById(R.id.login_button)
+        button.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                login()
+            }
+        })
 
         request()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        if (WebAuthProvider.resume(intent)) {
+            return
+        }
+        super.onNewIntent(intent)
     }
 
     fun request() {
@@ -55,5 +75,29 @@ class MainActivity : AppCompatActivity() {
                 })
         //add request to queue
         queue.add(jsonArrayRequest)
+    }
+
+    private fun login() {
+        val auth0 = Auth0("dCbk1ioiI470l5RjsQJjaI4M5OtEdtmd", "bkrebs.auth0.com")
+        auth0.isOIDCConformant = true
+        WebAuthProvider.init(auth0)
+                .withScheme("demo")
+                .start(this@MainActivity, object : AuthCallback {
+                    override fun onFailure(dialog: Dialog) {
+                        Log.w("", dialog.toString())
+                        // Show error Dialog to user
+                    }
+
+                    override fun onFailure(exception: AuthenticationException) {
+                        // Show error to user
+                        Log.w("", exception.toString())
+                    }
+
+                    override fun onSuccess(credentials: Credentials) {
+                        // Store credentials
+                        // Navigate to your main activity
+                        Log.w("", credentials.toString())
+                    }
+                })
     }
 }

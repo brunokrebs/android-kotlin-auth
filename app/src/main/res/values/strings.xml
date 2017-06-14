@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Android Kotlin Auth</string>
     <string name="button_add_item">Add new item.</string>
-    <string name="label_please_login">Please, log in.</string>
+    <string name="login">Please, log in.</string>
+    <string name="auth0_client_id">LtiwyfY1Y2ANJerCNTIbT7vVsX5zKBS5</string>
+    <string name="auth0_domain">bkrebs.auth0.com</string>
 </resources>
