@@ -3,6 +3,8 @@
     <data>
         <import type="android.view.View" />
         <variable name="loggedIn" type="java.lang.Boolean"/>
+        <variable name="buttonLabel" type="java.lang.String"/>
+        <variable name="inputLabel" type="java.lang.String"/>
     </data>
 
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
@@ -10,11 +12,19 @@
 
         <EditText
             android:id="@+id/fname"
+            android:focusable="@{loggedIn}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@+id/fname"
             android:inputType="text"
-            android:visibility="@{loggedIn ? View.VISIBLE : View.GONE}"/>
+            android:text="@{inputLabel}" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{buttonLabel}"
+            android:clickable="@{loggedIn}"/>
 
         <ListView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/listview"

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android Kotlin Auth</string>
+    <string name="button_add_item">Add new item.</string>
+    <string name="label_please_login">Please, log in.</string>
 </resources>

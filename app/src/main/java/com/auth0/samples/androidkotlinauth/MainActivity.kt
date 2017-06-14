@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
                 .setContentView(this, R.layout.activity_main)
 
         binding.loggedIn = false
+        binding.inputLabel = resources.getString(R.string.label_please_login)
+        binding.buttonLabel = resources.getString(R.string.label_please_login)
 
         request()
     }
