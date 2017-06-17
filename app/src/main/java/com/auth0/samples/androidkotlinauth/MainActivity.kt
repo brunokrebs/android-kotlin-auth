@@ -1,103 +1,78 @@
 package com.auth0.samples.androidkotlinauth
 
-import android.app.Dialog
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.View
-import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
+import android.widget.Toast
 import com.android.volley.toolbox.Volley
 import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.provider.AuthCallback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.auth0.samples.androidkotlinauth.databinding.ActivityMainBinding
-import org.json.JSONArray
+import com.auth0.android.callback.BaseCallback
+import com.auth0.android.result.UserProfile
 
 
 class MainActivity : AppCompatActivity() {
 
+    var binding: ActivityMainBinding? = null
+    var auth0: Auth0 = Auth0("dCbk1ioiI470l5RjsQJjaI4M5OtEdtmd", "bkrebs.auth0.com")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val binding : ActivityMainBinding = DataBindingUtil
-                .setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.loggedIn = false
+        binding?.loggedIn = false
 
-        val button = findViewById(R.id.login_button)
-        button.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                login()
+        val loginButton = findViewById(R.id.login_button)
+        loginButton.setOnClickListener { login() }
+        val queue = Volley.newRequestQueue(this)
+
+        val addItemButton = findViewById(R.id.add_item)
+        val itemEditText = findViewById(R.id.item) as EditText
+        val act = this;
+
+        addItemButton.setOnClickListener { v ->
+            val authentication = AuthenticationAPIClient(auth0)
+            try {
+                authentication.userInfo(CredentialsManager.getCredentials(this).accessToken!!)
+                        .start(object : BaseCallback<UserProfile, AuthenticationException> {
+                            override fun onSuccess(payload: UserProfile) {
+                                Toast.makeText(act.baseContext, payload.email, Toast.LENGTH_SHORT).show()
+                            }
+
+                            override fun onFailure(error: AuthenticationException) {
+                                error.toString()
+                            }
+                        })
+            } catch (e: Exception) {
+                e.toString()
             }
-        })
+        }
 
-        request()
+        val listView = findViewById(R.id.listview) as ListView
+        getItems(this, queue, listView)
     }
 
     override fun onNewIntent(intent: Intent) {
         if (WebAuthProvider.resume(intent)) {
+            binding?.loggedIn = true
             return
         }
         super.onNewIntent(intent)
     }
 
-    fun request() {
-        // Instantiate the RequestQueue
-        val queue = Volley.newRequestQueue(this)
-        val url = "http://10.0.2.2:8080/"
-
-        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET, url, null,
-                Response.Listener<JSONArray> { response -> run {
-                        val listview = findViewById(R.id.listview) as ListView
-
-                        val list = ArrayList<String>()
-
-                        for (i in 0 until response.length()) {
-                            list.add(response[i].toString())
-                        }
-
-                        val adapter = ArrayAdapter(this,
-                                android.R.layout.simple_list_item_1, list)
-                        listview.setAdapter(adapter)
-                    }
-                },
-                Response.ErrorListener { error -> run {
-                        Log.w(error.toString(), "err")
-                    }
-                })
-        //add request to queue
-        queue.add(jsonArrayRequest)
-    }
-
     private fun login() {
-        val auth0 = Auth0("dCbk1ioiI470l5RjsQJjaI4M5OtEdtmd", "bkrebs.auth0.com")
-        auth0.isOIDCConformant = true
         WebAuthProvider.init(auth0)
                 .withScheme("demo")
-                .start(this@MainActivity, object : AuthCallback {
-                    override fun onFailure(dialog: Dialog) {
-                        Log.w("", dialog.toString())
-                        // Show error Dialog to user
-                    }
-
-                    override fun onFailure(exception: AuthenticationException) {
-                        // Show error to user
-                        Log.w("", exception.toString())
-                    }
-
-                    override fun onSuccess(credentials: Credentials) {
-                        // Store credentials
-                        // Navigate to your main activity
-                        Log.w("", credentials.toString())
-                    }
-                })
+                .withScope("openid")
+                .withConnectionScope("manage:todo")
+                .start(this, AuthenticationHandler(this.applicationContext))
     }
 }

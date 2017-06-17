@@ -13,7 +13,23 @@
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login"/>
+            android:text="@string/login"
+            android:visibility="@{!loggedIn ? View.VISIBLE : View.GONE}" />
+
+        <EditText
+            android:id="@+id/item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:labelFor="@+id/item"
+            android:visibility="@{loggedIn ? View.VISIBLE : View.GONE}" />
+
+        <Button
+            android:id="@+id/add_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_item"
+            android:visibility="@{loggedIn ? View.VISIBLE : View.GONE}" />
 
         <ListView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/listview"
