@@ -20,6 +20,6 @@ class AuthenticationHandler(val context: Context) : AuthCallback {
     }
 
     override fun onSuccess(credentials: Credentials) {
-        CredentialsManager.saveCredentials(context, credentials)
+        CredentialsManager.saveCredentials(credentials)
     }
 }

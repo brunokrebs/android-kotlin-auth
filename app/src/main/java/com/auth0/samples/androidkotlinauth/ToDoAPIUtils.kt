@@ -34,13 +34,13 @@ fun getItems(activity: Activity, queue: RequestQueue, listView: ListView) {
     queue.add(jsonArrayRequest)
 }
 
-fun addItem(queue: RequestQueue, item: String, accessToken: String) {
+fun addItem(queue: RequestQueue, item: String, accessToken: String, done: () -> Unit) {
     val postRequest = object : StringRequest(Request.Method.POST, ENDPOINT,
             Response.Listener<String> {
-                response -> Log.d("Response", response)
+                done()
             },
-            Response.ErrorListener { error ->
-                Log.d("Error.Response", error.localizedMessage)
+            Response.ErrorListener {
+                error -> Log.w("APIRequest", error.toString())
             }
     ) {
         @Throws(AuthFailureError::class)

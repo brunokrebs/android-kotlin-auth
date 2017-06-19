@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.Toast
 import com.android.volley.toolbox.Volley
 import com.auth0.android.Auth0
 import com.auth0.android.provider.WebAuthProvider
@@ -30,12 +31,19 @@ class MainActivity : AppCompatActivity() {
         val addItemButton = findViewById(R.id.add_item)
         val itemEditText = findViewById(R.id.item) as EditText
 
-        addItemButton.setOnClickListener {
-            addItem(queue, itemEditText.text.toString(),
-                    CredentialsManager.getCredentials(this).accessToken!!)
-        }
+        CredentialsManager.setContext(this)
 
         val listView = findViewById(R.id.listview) as ListView
+
+        addItemButton.setOnClickListener {
+            val item = itemEditText.text.toString()
+            addItem(queue, item, CredentialsManager.getAccessToken(), {
+                itemEditText.text.clear()
+                Toast.makeText(this, "Item added", Toast.LENGTH_SHORT).show()
+                getItems(this, queue, listView)
+            })
+        }
+
         getItems(this, queue, listView)
     }
 
