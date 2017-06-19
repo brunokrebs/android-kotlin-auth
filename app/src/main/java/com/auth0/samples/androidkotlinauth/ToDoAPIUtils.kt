@@ -51,7 +51,7 @@ fun addItem(queue: RequestQueue, item: String, accessToken: String, done: () -> 
         @Throws(AuthFailureError::class)
         override fun getHeaders(): Map<String, String> {
             val headers: Map<String, String> = hashMapOf(
-                    "Authorization" to "Bearer ${accessToken}",
+                    "Authorization" to "Bearer $accessToken",
                     "Content-Type" to "text/plain"
             )
             return headers
