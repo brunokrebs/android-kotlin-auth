@@ -30,11 +30,11 @@ fun getItems(activity: Activity, queue: RequestQueue, listView: ListView) {
                 Toast.makeText(activity.applicationContext, error.toString(), Toast.LENGTH_SHORT).show()
             }
     )
-    //add getItems to queue
+    //add GET REQUEST to queue
     queue.add(jsonArrayRequest)
 }
 
-fun addItem(activity: Activity, queue: RequestQueue, item: String, accessToken: String) {
+fun addItem(queue: RequestQueue, item: String, accessToken: String) {
     val postRequest = object : StringRequest(Request.Method.POST, ENDPOINT,
             Response.Listener<String> {
                 response -> Log.d("Response", response)
@@ -50,11 +50,13 @@ fun addItem(activity: Activity, queue: RequestQueue, item: String, accessToken: 
 
         @Throws(AuthFailureError::class)
         override fun getHeaders(): Map<String, String> {
-            val headers = super.getHeaders()
-            headers.put("Authorization", "Beaerer " + accessToken)
+            val headers: Map<String, String> = hashMapOf(
+                    "Authorization" to "Bearer ${accessToken}",
+                    "Content-Type" to "text/plain"
+            )
             return headers
         }
     }
-
+    //add POST REQUEST to queue
     queue.add(postRequest)
 }

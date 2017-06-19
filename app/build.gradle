@@ -38,6 +38,8 @@ dependencies {
     compile 'com.auth0.android:auth0:1.8.0'
 }
 
+apply plugin: 'kotlin-kapt'
+
 kapt {
     generateStubs = true
 }

@@ -2,6 +2,6 @@
     <string name="app_name">Android Kotlin Auth</string>
     <string name="add_item">Add new item.</string>
     <string name="login">Please, log in.</string>
-    <string name="auth0_client_id">Xql8m7KPKJP5mAIcl8hP1Zkg7x9fJ3GB</string>
-    <string name="auth0_domain">bkrebs.auth0.com</string>
+    <string name="auth0_client_id">-2g6R4254d_BtLR2NTfsks_Iu_4LVMsi</string>
+    <string name="auth0_domain">krebshaus.auth0.com</string>
 </resources>

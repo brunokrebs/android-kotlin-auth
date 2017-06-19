@@ -6,54 +6,33 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.Toast
 import com.android.volley.toolbox.Volley
 import com.auth0.android.Auth0
-import com.auth0.android.authentication.AuthenticationAPIClient
-import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
-import com.auth0.android.result.Credentials
 import com.auth0.samples.androidkotlinauth.databinding.ActivityMainBinding
-import com.auth0.android.callback.BaseCallback
-import com.auth0.android.result.UserProfile
-
 
 class MainActivity : AppCompatActivity() {
-
     var binding: ActivityMainBinding? = null
-    var auth0: Auth0 = Auth0("dCbk1ioiI470l5RjsQJjaI4M5OtEdtmd", "bkrebs.auth0.com")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding?.loggedIn = false
 
         val loginButton = findViewById(R.id.login_button)
         loginButton.setOnClickListener { login() }
+
         val queue = Volley.newRequestQueue(this)
 
         val addItemButton = findViewById(R.id.add_item)
         val itemEditText = findViewById(R.id.item) as EditText
-        val act = this;
 
-        addItemButton.setOnClickListener { v ->
-            val authentication = AuthenticationAPIClient(auth0)
-            try {
-                authentication.userInfo(CredentialsManager.getCredentials(this).accessToken!!)
-                        .start(object : BaseCallback<UserProfile, AuthenticationException> {
-                            override fun onSuccess(payload: UserProfile) {
-                                Toast.makeText(act.baseContext, payload.email, Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onFailure(error: AuthenticationException) {
-                                error.toString()
-                            }
-                        })
-            } catch (e: Exception) {
-                e.toString()
-            }
+        addItemButton.setOnClickListener {
+            addItem(queue, itemEditText.text.toString(),
+                    CredentialsManager.getCredentials(this).accessToken!!)
         }
 
         val listView = findViewById(R.id.listview) as ListView
@@ -69,10 +48,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        WebAuthProvider.init(auth0)
+        WebAuthProvider.init(Auth0("-2g6R4254d_BtLR2NTfsks_Iu_4LVMsi", "krebshaus.auth0.com"))
                 .withScheme("demo")
-                .withScope("openid")
                 .withConnectionScope("manage:todo")
+                .withAudience("http://kotlin-test.com")
                 .start(this, AuthenticationHandler(this.applicationContext))
     }
 }
