@@ -8,9 +8,9 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
 import com.android.volley.toolbox.Volley
-import com.auth0.android.Auth0
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.samples.androidkotlinauth.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
     var binding: ActivityMainBinding? = null
@@ -56,10 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        WebAuthProvider.init(Auth0("-2g6R4254d_BtLR2NTfsks_Iu_4LVMsi", "krebshaus.auth0.com"))
-                .withScheme("demo")
-                .withConnectionScope("manage:todo")
-                .withAudience("http://kotlin-test.com")
-                .start(this, AuthenticationHandler(this.applicationContext))
+        val intent = Intent(this, SignInUpActivity::class.java)
+        startActivity(intent)
     }
 }

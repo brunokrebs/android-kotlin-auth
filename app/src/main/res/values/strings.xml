@@ -4,4 +4,7 @@
     <string name="login">Please, log in.</string>
     <string name="auth0_client_id">-2g6R4254d_BtLR2NTfsks_Iu_4LVMsi</string>
     <string name="auth0_domain">krebshaus.auth0.com</string>
+    <string name="sign_in">Sign In</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
 </resources>
